@@ -1,0 +1,68 @@
+# ------------------------------------------------------
+# 1. OS & IDE (운영체제 및 에디터 설정 파일 무시)
+# ------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ------------------------------------------------------
+# 2. Python / FastAPI (백엔드 관련)
+# ------------------------------------------------------
+# 컴파일된 파일
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 가상환경 (폴더명이 venv 또는 .venv일 경우)
+venv/
+.venv/
+env/
+
+# Python 3.13 로컬 설치 디렉토리 (Windows)
+backend/Lib/
+backend/Scripts/
+
+# 배포/패키징
+dist/
+build/
+*.egg-info/
+
+# ------------------------------------------------------
+# 3. Node.js / React Native / Expo (프론트엔드 관련)
+# ------------------------------------------------------
+# 의존성 패키지 (가장 중요, 절대 커밋 금지)
+node_modules/
+
+# 로그 파일
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Expo 빌드 및 캐시
+.expo/
+web-build/
+dist/
+
+# 메트로 번들러 임시 파일
+.metro-health-check*
+
+# 패키지 락 파일 (선택사항 - 팀 정책에 따라)
+# package-lock.json
+
+# ------------------------------------------------------
+# 4. Security & Environment (보안 - 절대 커밋 금지!!!)
+# ------------------------------------------------------
+# 환경변수 파일 (API KEY가 들어있음)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 인증서 등
+*.pem
+*.key

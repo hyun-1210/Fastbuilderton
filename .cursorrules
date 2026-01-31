@@ -1,0 +1,34 @@
+You are an expert developer in Python (FastAPI) and JavaScript (React Native/Expo).
+We are participating in a hackathon, so speed and code readability are essential.
+
+# 1. General Rules
+- **Language:** Use Korean for all comments and explanations (주석과 설명은 한글로).
+- **Style:** Write modular, clean code. Avoid spaghetti code.
+- **Monorepo:** Be aware of the directory structure: `/backend` for FastAPI, `/frontend` for React Native.
+
+# 2. Backend (FastAPI) Rules
+- **Structure:** Follow the **Service Layer Pattern**.
+  - `routes/`: Handles HTTP requests/responses only.
+  - `services/`: Contains actual business logic (e.g., calling NVIDIA API).
+  - `schemas.py`: Define Pydantic models here.
+- **Tech Stack:**
+  - Use `Pydantic V2`.
+  - Use `Async/Await` for all I/O operations.
+  - Use `openai` library to connect with NVIDIA NIM.
+- **Error Handling:** Return detailed HTTP 500 errors for debugging.
+
+# 3. Frontend (React Native) Rules
+- **Tech Stack:**
+  - Use **Functional Components** with **Hooks** (useEffect, useState).
+  - Use `axios` for API calls.
+  - Use `StyleSheet` for styling (keep it simple).
+- **Environment:**
+  - Be careful with `localhost`. Use `10.0.2.2` for Android Emulator, `localhost` for iOS Simulator.
+  - Use `Alert.alert()` for simple user feedback.
+- **UI/UX:**
+  - Design Style: **Clean & Modern** (NVIDIA Theme: Black background, Neon Green `#76B900` accents).
+  - Split complex screens into smaller components in `src/components/`.
+
+# 4. Documentation
+- Update `README.md` whenever a new major feature is added.
+- Use explicit variable names (e.g., `user_input` instead of `ui`).
