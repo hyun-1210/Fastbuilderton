@@ -5,4 +5,9 @@ openai>=1.54.0
 # Python 3.14 호환성을 위해 개발 버전 필요 시:
 # py -m pip install git+https://github.com/pydantic/pydantic.git
 pydantic>=2.10.0
+sqlalchemy>=2.0.0
+aiosqlite>=0.20.0
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+python-multipart>=0.0.6
 

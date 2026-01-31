@@ -3,13 +3,26 @@ FastAPI 애플리케이션 진입점
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import ai_router
+from contextlib import asynccontextmanager
+from routes import ai_router, personas, categories, interaction_logs, auth, users, persona_notes
+from database import init_db
+
+# 앱 시작/종료 시 실행할 함수
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """앱 시작 시 DB 초기화, 종료 시 정리"""
+    # 시작 시
+    await init_db()
+    yield
+    # 종료 시 (필요시 정리 작업)
+
 
 # FastAPI 앱 생성
 app = FastAPI(
     title="FastAPI Backend",
     description="해커톤 프로젝트 백엔드 API",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 # CORS 미들웨어 설정 (React Native 앱 접속 허용)
@@ -23,6 +36,12 @@ app.add_middleware(
 
 # 라우터 등록
 app.include_router(ai_router.router, prefix="/api/ai", tags=["AI"])
+app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
+app.include_router(users.router, prefix="/api/users", tags=["Users"])
+app.include_router(personas.router, prefix="/api/personas", tags=["Personas"])
+app.include_router(categories.router, prefix="/api/categories", tags=["Categories"])
+app.include_router(interaction_logs.router, prefix="/api/interaction-logs", tags=["InteractionLogs"])
+app.include_router(persona_notes.router, prefix="/api/persona-notes", tags=["PersonaNotes"])
 
 
 @app.get("/")
