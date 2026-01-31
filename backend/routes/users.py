@@ -6,8 +6,9 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_db
-from schemas import UserResponse, UserUpdate
+from schemas import UserResponse, UserUpdate, RadarResponse
 from services.user_service import UserService
+from services.radar_service import RadarService
 from utils.dependencies import get_current_user
 from models import User
 
@@ -24,6 +25,18 @@ async def get_current_user_info(
     JWT 토큰에서 사용자 정보를 가져옵니다.
     """
     return UserResponse.model_validate(current_user)
+
+
+@router.get("/me/radar", response_model=RadarResponse)
+async def get_my_radar(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    홈 화면 라다 차트 데이터 조회.
+    로그인한 사용자의 카테고리별 평균 관계 만족도(relationship_temp)와 페르소나 목록을 반환합니다.
+    """
+    return await RadarService.get_radar_for_user(db, current_user.id)
 
 
 @router.get("/{user_id}", response_model=UserResponse)

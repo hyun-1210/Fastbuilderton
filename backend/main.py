@@ -7,12 +7,19 @@ from contextlib import asynccontextmanager
 from routes import ai_router, personas, categories, interaction_logs, auth, users, persona_notes
 from database import init_db
 
+# 모델을 로드해 Base.metadata에 테이블이 등록된 뒤 init_db()가 실행되도록 함
+import models  # noqa: F401, E402
+
 # 앱 시작/종료 시 실행할 함수
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """앱 시작 시 DB 초기화, 종료 시 정리"""
-    # 시작 시
-    await init_db()
+    try:
+        await init_db()
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise RuntimeError(f"DB 초기화 실패: {e}") from e
     yield
     # 종료 시 (필요시 정리 작업)
 

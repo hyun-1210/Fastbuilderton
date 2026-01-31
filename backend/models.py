@@ -56,7 +56,7 @@ class NotificationType(str, Enum):
 
 
 class User(Base):
-    """사용자 정보 테이블"""
+    """사용자 정보 테이블. 한 사용자(User)가 여러 Category를 갖고, 각 Category에 여러 Persona가 연결됩니다."""
     __tablename__ = "users"
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -68,13 +68,13 @@ class User(Base):
     timezone = Column(String, default="Asia/Seoul", nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
 
-    # 관계
-    personas = relationship("Persona", back_populates="user", cascade="all, delete-orphan")
+    # 사용자 소유: 카테고리 목록(가족/직장/친구 등) 및 각 카테고리 내 페르소나
     categories = relationship("Category", back_populates="user", cascade="all, delete-orphan")
+    personas = relationship("Persona", back_populates="user", cascade="all, delete-orphan")
 
 
 class Category(Base):
-    """카테고리 테이블 (사용자별 관계 유형 관리)"""
+    """카테고리 테이블. User에 연결되며, 해당 카테고리(가족/직장/친구 등) 안에 여러 Persona가 속합니다."""
     __tablename__ = "categories"
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -82,27 +82,27 @@ class Category(Base):
     name = Column(String, nullable=False)  # 카테고리 이름 (예: "가족", "직장", "친구")
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
 
-    # 관계
+    # 소유 사용자 + 이 카테고리 안의 페르소나들 (홈 라다 차트의 “축” 하나에 해당)
     user = relationship("User", back_populates="categories")
     personas = relationship("Persona", back_populates="category", cascade="all, delete-orphan")
 
 
 class Persona(Base):
-    """페르소나 (관리 대상 인물) 테이블"""
+    """페르소나 (관리 대상 인물) 테이블. User와 Category에 연결되며, 홈 라다 차트의 한 “축” 안의 인물입니다."""
     __tablename__ = "personas"
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    category_id = Column(String, ForeignKey("categories.id", ondelete="CASCADE"), nullable=False, index=True)
     name = Column(String, nullable=False)
     phone_number = Column(String, nullable=False)  # 필수
-    category_id = Column(String, ForeignKey("categories.id", ondelete="CASCADE"), nullable=False, index=True)
     birth_date = Column(DateTime, nullable=False)  # 필수
     anniversary_date = Column(DateTime, nullable=False)  # 필수
     importance_weight = Column(Integer, default=50, nullable=False)  # 0~100
-    relationship_temp = Column(Float, default=50.0, nullable=False)  # 0~100도, AI 계산
+    relationship_temp = Column(Float, default=50.0, nullable=False)  # 0~100도, AI 계산 (라다 점수)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
 
-    # 관계
+    # 소유 사용자 + 소속 카테고리 (User → Category → Persona 연결)
     user = relationship("User", back_populates="personas")
     category = relationship("Category", back_populates="personas")
     interaction_logs = relationship("InteractionLog", back_populates="persona", cascade="all, delete-orphan")

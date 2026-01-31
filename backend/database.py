@@ -9,10 +9,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# 데이터베이스 URL (환경 변수에서 가져오거나 기본값 사용)
+# SQLite 경로: backend 폴더 기준 절대 경로 (uvicorn 서브프로세스에서도 동일하게 동작)
+_db_dir = os.path.dirname(os.path.abspath(__file__))
+_default_db_path = os.path.join(_db_dir, "app.db").replace("\\", "/")
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "sqlite+aiosqlite:///./app.db"  # SQLite 기본값
+    f"sqlite+aiosqlite:///{_default_db_path}"
 )
 
 # 비동기 엔진 생성

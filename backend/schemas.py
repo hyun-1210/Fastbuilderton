@@ -270,6 +270,27 @@ class NotificationLogResponse(NotificationLogBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+# ========== Radar (홈 화면 관계 만족도 차트) ==========
+class RadarPersonaItem(BaseModel):
+    """라다 차트용 페르소나 요약"""
+    name: str
+
+
+class RadarCategoryItem(BaseModel):
+    """라다 차트용 카테고리 항목 (평균 관계온도 + 페르소나 목록)"""
+    id: str
+    name: str
+    score: float  # 0~100, 카테고리 내 페르소나 평균 relationship_temp
+    persona_count: int
+    personas: List[RadarPersonaItem] = []
+
+
+class RadarResponse(BaseModel):
+    """홈 화면 라다 차트 데이터"""
+    categories: List[RadarCategoryItem]
+    overall_score: float  # 전체 평균 (만족도 점수)
+
+
 # ========== 복합 응답 스키마 ==========
 class PersonaDetailResponse(PersonaResponse):
     """페르소나 상세 정보 (관계 데이터 포함)"""
